@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--add a drop button background xml-->
+    <dimen name="btn_add_it_corner_radius_purple">2dp</dimen>
+    <dimen name="btn_add_it_corner_radius_green">2dp</dimen>
+
+    <!--Properties associated with logo inside empty drops-->
+    <dimen name="iv_logo_size">192dp</dimen>
+    <dimen name="iv_logo_margin">84dp</dimen>
+
+    <!--Properties associated with "Add a drop button"-->
+    <dimen name="btn_add_margin">24dp</dimen>
+    <dimen name="btn_add_vertical_padding">8dp</dimen>
+    <dimen name="btn_add_horizontal_padding">60dp</dimen>
+    <dimen name="btn_font_size">28sp</dimen>
+</resources>
