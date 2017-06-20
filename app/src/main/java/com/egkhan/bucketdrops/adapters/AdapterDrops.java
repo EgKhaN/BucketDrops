@@ -20,13 +20,24 @@ import io.realm.RealmResults;
 public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     LayoutInflater layoutInflater;
     RealmResults<Drop> realmResults;
+    AddListener addListener;
 
     public static final int ITEM = 0;
     public static final int FOOTER = 1;
 
+//    public void setAddListener(AddListener listener)
+//    {
+//        this.addListener = listener;
+//    }
+
     public AdapterDrops(Context context, RealmResults<Drop> results) {
         layoutInflater = LayoutInflater.from(context);
         Update(results);
+    }
+    public AdapterDrops(Context context, RealmResults<Drop> results,AddListener listener) {
+        layoutInflater = LayoutInflater.from(context);
+        Update(results);
+        this.addListener = listener;
     }
 
     public void Update(RealmResults<Drop> results) {
@@ -46,7 +57,7 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == FOOTER) {
             View rowDropView = layoutInflater.inflate(R.layout.footer, parent, false);
-            return new FooterHolder(rowDropView);
+            return new FooterHolder(rowDropView,addListener);
         } else {
             View rowDropView = layoutInflater.inflate(R.layout.row_drop, parent, false);
             return new DropHolder(rowDropView);
@@ -78,12 +89,24 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    public static class FooterHolder extends RecyclerView.ViewHolder {
+    public static class FooterHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         Button btnAdd_Footer;
+        AddListener addListener;
 
         public FooterHolder(View itemView) {
             super(itemView);
             btnAdd_Footer = (Button) itemView.findViewById(R.id.btn_add_it_footer);
+            btnAdd_Footer.setOnClickListener(this);
+        }public FooterHolder(View itemView,AddListener listener) {
+            super(itemView);
+            btnAdd_Footer = (Button) itemView.findViewById(R.id.btn_add_it_footer);
+            btnAdd_Footer.setOnClickListener(this);
+            addListener = listener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            addListener.Add();
         }
     }
 }
