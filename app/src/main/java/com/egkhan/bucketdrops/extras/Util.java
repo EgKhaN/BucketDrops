@@ -1,5 +1,7 @@
 package com.egkhan.bucketdrops.extras;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 
 import java.util.List;
@@ -18,6 +20,20 @@ public class Util {
     {
         for (View view:views) {
             view.setVisibility(View.GONE);
+        }
+    }
+public static boolean moreThanJellyBean()
+{
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+}
+
+    public static void setBackground(View itemView, Drawable drawable) {
+        if (moreThanJellyBean()) {
+            itemView.setBackground(drawable);
+        }
+        else
+        {
+            itemView.setBackgroundDrawable(drawable);
         }
     }
 }
