@@ -41,6 +41,10 @@ public class DialogMark extends DialogFragment {
             completeListener.onComplete(position);
         }
     }
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL,R.style.DialogTheme);
+    }
 
     @Nullable
     @Override
