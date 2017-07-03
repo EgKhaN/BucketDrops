@@ -7,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.egkhan.bucketdrops.beans.Drop;
-
-import java.util.Calendar;
+import com.egkhan.bucketdrops.widgets.BucketPickerView;
 
 import io.realm.Realm;
 
@@ -25,7 +23,7 @@ import io.realm.Realm;
 public class DialogAdd extends DialogFragment {
     ImageButton btnClose;
     EditText inputWhat;
-    DatePicker inputWhen;
+    BucketPickerView inputWhen;
     Button btnAdd;
 
     View.OnClickListener btnCloseClickListener = new View.OnClickListener() {
@@ -44,19 +42,19 @@ public class DialogAdd extends DialogFragment {
     private void addAction() {
         String what = inputWhat.getText().toString();
 
-        String date = inputWhen.getDayOfMonth() + "/"+ inputWhen.getMonth()+ "/"+inputWhen.getYear();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH,inputWhen.getDayOfMonth());
-        calendar.set(Calendar.MONTH,inputWhen.getMonth());
-        calendar.set(Calendar.YEAR,inputWhen.getYear());
-        calendar.set(Calendar.HOUR,0);
-        calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);
+       // String date = inputWhen.getDayOfMonth() + "/"+ inputWhen.getMonth()+ "/"+inputWhen.getYear();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.DAY_OF_MONTH,inputWhen.getDayOfMonth());
+//        calendar.set(Calendar.MONTH,inputWhen.getMonth());
+//        calendar.set(Calendar.YEAR,inputWhen.getYear());
+//        calendar.set(Calendar.HOUR,0);
+//        calendar.set(Calendar.MINUTE,0);
+//        calendar.set(Calendar.SECOND,0);
 
         long now = System.currentTimeMillis();
 
         Realm realm = Realm.getDefaultInstance();
-        Drop drop = new Drop(what, now, calendar.getTimeInMillis(), false);
+        Drop drop = new Drop(what, now, inputWhen.getTime(), false);
         realm.beginTransaction();
         realm.copyToRealm(drop);
         realm.commitTransaction();
@@ -83,7 +81,7 @@ public class DialogAdd extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         inputWhat = (EditText) view.findViewById(R.id.et_drop);
         btnClose = (ImageButton) view.findViewById(R.id.btn_close);
-        inputWhen = (DatePicker) view.findViewById(R.id.bpv_date);
+        inputWhen = (BucketPickerView) view.findViewById(R.id.bpv_date);
         btnAdd = (Button) view.findViewById(R.id.btn_add_it);
 
         btnClose.setOnClickListener(btnCloseClickListener);

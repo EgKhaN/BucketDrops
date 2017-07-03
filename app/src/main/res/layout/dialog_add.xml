@@ -32,7 +32,7 @@
         android:padding="16dp"
         android:inputType="textVisiblePassword"/>
 
-    <DatePicker
+    <com.egkhan.bucketdrops.widgets.BucketPickerView
         android:id="@+id/bpv_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
