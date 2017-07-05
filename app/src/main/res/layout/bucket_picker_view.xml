@@ -11,14 +11,14 @@
         android:text="JAN" />
 
     <Space
-        android:layout_width="32dp"
+        android:layout_width="@dimen/bpvSpace"
         android:layout_height="match_parent" />
     <TextView
         android:id="@+id/tv_date"
         style="@style/PickerTextStyle"
         android:text="10" />
     <Space
-        android:layout_width="32dp"
+        android:layout_width="@dimen/bpvSpace"
         android:layout_height="match_parent" />
     <TextView
         android:id="@+id/tv_year"

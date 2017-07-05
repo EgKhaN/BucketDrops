@@ -21,4 +21,8 @@
     <dimen name="tv_what_horizontal_padding">22dp</dimen>
     <dimen name="tv_no_items_vertical_padding">22dp</dimen>
     <dimen name="bg_picker_item_corner_radius">4dp</dimen>
+
+    <dimen name="pickerTextWidth">92dp</dimen>
+    <dimen name="bpvSpace">16dp</dimen>
+    <dimen name="pickerTextDrawablePadding">16dp</dimen>
 </resources>

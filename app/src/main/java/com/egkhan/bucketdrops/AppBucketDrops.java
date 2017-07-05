@@ -3,7 +3,9 @@ package com.egkhan.bucketdrops;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+import android.widget.TextView;
 
 import com.egkhan.bucketdrops.adapters.Filter;
 
@@ -34,5 +36,17 @@ public class AppBucketDrops extends Application {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         int filterOption = sharedPreferences.getInt("filter", Filter.NONE);
         return filterOption;
+    }
+
+    public static void setRalewayRegular(Context context, TextView textView) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/raleway_thin.tff");
+        textView.setTypeface(typeface);
+    }
+    public static void setRalewayRegular(Context context, TextView... textViews) {
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/raleway_thin.tff");
+        for ( TextView textView: textViews) {
+            textView.setTypeface(typeface);
+        }
+
     }
 }

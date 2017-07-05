@@ -51,7 +51,7 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         Update(results);
     }
 
-    public AdapterDrops(Context context, Realm realm, RealmResults<Drop> results, AddListener addListener, MarkListener markListener,ResetListener resetListener) {
+    public AdapterDrops(Context context, Realm realm, RealmResults<Drop> results, AddListener addListener, MarkListener markListener, ResetListener resetListener) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
         this.realm = realm;
@@ -69,8 +69,7 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public long getItemId(int position) {
-        if(position < realmResults.size())
-        {
+        if (position < realmResults.size()) {
             return realmResults.get(position).getAdded();
         }
         return RecyclerView.NO_ID;
@@ -82,16 +81,14 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //            return ITEM;
 //        } else
 //            return FOOTER;
-        if(!realmResults.isEmpty())
-        {
-            if(position<realmResults.size())
+        if (!realmResults.isEmpty()) {
+            if (position < realmResults.size())
                 return ITEM;
             else
                 return FOOTER;
-        }
-        else{
-            if(filterOption == Filter.COMPLETE || filterOption == Filter.INCOMPLETE)
-                if(position == 0)
+        } else {
+            if (filterOption == Filter.COMPLETE || filterOption == Filter.INCOMPLETE)
+                if (position == 0)
                     return NO_ITEM;
                 else
                     return FOOTER;
@@ -106,7 +103,8 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewType == FOOTER) {
             View rowDropView = layoutInflater.inflate(R.layout.footer, parent, false);
             return new FooterHolder(rowDropView, addListener);
-        } if (viewType == NO_ITEM) {
+        }
+        if (viewType == NO_ITEM) {
             View rowDropView = layoutInflater.inflate(R.layout.no_item, parent, false);
             return new NoItemsHolder(rowDropView);
         } else {
@@ -134,15 +132,12 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //        else
 //            return realmResults.size() + 1;
         // +1 footer için
-        if(!realmResults.isEmpty())
-        {
-            return realmResults.size()+COUNT_FOOTER;
-        }
-        else{
-            if(filterOption == Filter.LEAST_TIME_LEFT || filterOption == Filter.MOST_TIME_LEFT || filterOption == Filter.NONE)
+        if (!realmResults.isEmpty()) {
+            return realmResults.size() + COUNT_FOOTER;
+        } else {
+            if (filterOption == Filter.LEAST_TIME_LEFT || filterOption == Filter.MOST_TIME_LEFT || filterOption == Filter.NONE)
                 return 0;
-            else
-            {
+            else {
                 return COUNT_NO_ITEMS + COUNT_FOOTER;
             }
         }
@@ -160,8 +155,7 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void resetFilterIfEmpty() {
-        if(realmResults.isEmpty() && (filterOption == Filter.COMPLETE|| filterOption == Filter.INCOMPLETE))
-        {
+        if (realmResults.isEmpty() && (filterOption == Filter.COMPLETE || filterOption == Filter.INCOMPLETE)) {
             resetListener.onReset();
         }
     }
@@ -189,14 +183,18 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             itemView.setOnClickListener(this);
             textWhat = (TextView) itemView.findViewById(R.id.tv_what);
             textWhen = (TextView) itemView.findViewById(R.id.tv_when);
+
+            AppBucketDrops.setRalewayRegular(context, textWhat, textWhen);
+
             this.markListener = markListener;
         }
 
         public void setWhat(String what) {
             textWhat.setText(what);
         }
+
         public void setWhen(long when) {
-            textWhen.setText(DateUtils.getRelativeTimeSpanString(when, System.currentTimeMillis(),DateUtils.DAY_IN_MILLIS,0));
+            textWhen.setText(DateUtils.getRelativeTimeSpanString(when, System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS, 0));
         }
 
         @Override
@@ -211,14 +209,15 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             } else {
                 drawable = ContextCompat.getDrawable(context, R.drawable.bg_row_drop);
             }
-            Util.setBackground(itemView,drawable);
+            Util.setBackground(itemView, drawable);
 
 
         }
 
 
     }
-    public  static class NoItemsHolder extends RecyclerView.ViewHolder{
+
+    public static class NoItemsHolder extends RecyclerView.ViewHolder {
 
         public NoItemsHolder(View itemView) {
             super(itemView);
