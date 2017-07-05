@@ -8,7 +8,7 @@
                 android:bottomRightRadius="@dimen/bg_picker_item_corner_radius"/>
         </shape>
     </item>
-    <item android:drawable="@drawable/ic_arrow_drop_up_pressed" android:gravity="center">
+    <item android:drawable="@drawable/ic_arrow_drop_down_pressed" android:gravity="center">
 
     </item>
 </layer-list>

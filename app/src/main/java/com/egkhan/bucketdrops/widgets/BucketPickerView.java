@@ -3,6 +3,10 @@ package com.egkhan.bucketdrops.widgets;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,12 +29,30 @@ public class BucketPickerView extends LinearLayout implements View.OnTouchListen
     public static final int TOP = 1;
     public static final int RIGHT = 2;
     public static final int BOTTOM = 3;
+    private static final int MESSAGE_WHAT = 123;
+    public static final int DELAY = 250;
 
     Calendar calendar;
     TextView textDate;
     TextView textMonth;
     TextView textYear;
     SimpleDateFormat dateFormat;
+    boolean increment;
+    boolean decrement;
+    int activeTextViewID;
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (increment)
+                increment(activeTextViewID);
+            if (decrement)
+                decrement(activeTextViewID);
+            if (increment || decrement)
+                handler.sendEmptyMessageDelayed(MESSAGE_WHAT, DELAY);
+            return true;
+        }
+    });
 
     public BucketPickerView(Context context) {
         super(context);
@@ -52,6 +74,31 @@ public class BucketPickerView extends LinearLayout implements View.OnTouchListen
         View view = LayoutInflater.from(context).inflate(R.layout.bucket_picker_view, this);
         calendar = java.util.Calendar.getInstance();
         dateFormat = new SimpleDateFormat("MMM");
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("super",super.onSaveInstanceState());
+        bundle.putInt("date",calendar.get(Calendar.DATE));
+        bundle.putInt("year",calendar.get(Calendar.YEAR));
+        bundle.putInt("month",calendar.get(Calendar.MONTH));
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if(state instanceof Parcelable)
+        {
+            Bundle bundle = (Bundle) state;
+            state = bundle.getParcelable("super");
+            int date = bundle.getInt("date");
+            int month = bundle.getInt("month");
+            int year = bundle.getInt("year");
+
+            update(date,month,year,0,0,0);
+        }
+        super.onRestoreInstanceState(state);
     }
 
     @Override
@@ -111,40 +158,60 @@ public class BucketPickerView extends LinearLayout implements View.OnTouchListen
 //            case MotionEvent.ACTION_CANCEL:
 //                break;
 //        }
-        return false;
+        return true;
     }
 
-    void processEventsFor(TextView textView, MotionEvent event) {
+    private void processEventsFor(TextView textView, MotionEvent event) {
         Drawable[] drawables = textView.getCompoundDrawables();
         if (hasDrawableTop(drawables) && hasDrawableBottom(drawables)) {
             Rect topBounds = drawables[TOP].getBounds();
             Rect bottomBounds = drawables[BOTTOM].getBounds();
             float x = event.getX();
             float y = event.getY();
+            activeTextViewID = textView.getId();
             if (topDrawableHit(textView, topBounds.height(), x, y)) {
                 if (isActionDown(event)) {
-increment(textView.getId());
+                    increment = true;
+                    increment(textView.getId());
+                    handler.removeMessages(MESSAGE_WHAT);
+                    handler.sendEmptyMessageDelayed(MESSAGE_WHAT, DELAY);
+                    toggleDrawable(textView,true);
                 }
+                if (isActionUpOrCancel(event)) {
+                    increment = false;
+                    toggleDrawable(textView,false);
+                }
+
             } else if (bottomDrawableHit(textView, bottomBounds.height(), x, y)) {
                 if (isActionDown(event)) {
+                    decrement = true;
                     decrement(textView.getId());
+                    handler.removeMessages(MESSAGE_WHAT);
+                    handler.sendEmptyMessageDelayed(MESSAGE_WHAT, DELAY);
+                    toggleDrawable(textView,true);
+                }
+                if (isActionUpOrCancel(event)) {
+                    decrement = false;
+                    toggleDrawable(textView,false);
                 }
             } else {
-
+                increment = false;
+                decrement = false;
+                toggleDrawable(textView,false);
             }
         }
-
     }
-    void increment(int textViewId){
+
+    void increment(int textViewId) {
         switch (textViewId) {
             case R.id.tv_date:
-                calendar.add(Calendar.DATE,1);
+                calendar.add(Calendar.DATE, 1);
                 break;
             case R.id.tv_month:
-                calendar.add(Calendar.MONTH,1);
+                calendar.add(Calendar.MONTH, 1);
                 break;
             case R.id.tv_year:
-                calendar.add(Calendar.YEAR,1);
+                calendar.add(Calendar.YEAR, 1);
                 break;
         }
         setWidgetDate(calendar);
@@ -154,21 +221,21 @@ increment(textView.getId());
         int date = calendar.get(Calendar.DATE);
         int year = calendar.get(Calendar.YEAR);
 
-        textDate.setText(date+"");
+        textDate.setText(date + "");
         textMonth.setText(dateFormat.format(calendar.getTime()));
-        textYear.setText(year+"");
+        textYear.setText(year + "");
     }
 
-    void decrement(int textViewId){
+    void decrement(int textViewId) {
         switch (textViewId) {
             case R.id.tv_date:
-                calendar.add(Calendar.DATE,-1);
+                calendar.add(Calendar.DATE, -1);
                 break;
             case R.id.tv_month:
-                calendar.add(Calendar.MONTH,-1);
+                calendar.add(Calendar.MONTH, -1);
                 break;
             case R.id.tv_year:
-                calendar.add(Calendar.YEAR,-1);
+                calendar.add(Calendar.YEAR, -1);
                 break;
         }
         setWidgetDate(calendar);
@@ -176,6 +243,10 @@ increment(textView.getId());
 
     boolean isActionDown(MotionEvent event) {
         return event.getAction() == MotionEvent.ACTION_DOWN;
+    }
+
+    boolean isActionUpOrCancel(MotionEvent event) {
+        return event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL;
     }
 
     boolean topDrawableHit(TextView textView, int drawableHeight, float x, float y) {
@@ -200,5 +271,22 @@ increment(textView.getId());
 
     boolean hasDrawableBottom(Drawable[] drawables) {
         return drawables[BOTTOM] != null;
+    }
+    void toggleDrawable(TextView textView,boolean pressed)
+    {
+        if(pressed)
+        {
+            if(increment)
+            {
+textView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.up_pressed,0, R.drawable.down_normal);
+            }
+            if(decrement)
+            {
+                textView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.up_normal,0, R.drawable.down_pressed);
+            }
+        }
+        else{
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.up_normal,0, R.drawable.down_normal);
+        }
     }
 }
