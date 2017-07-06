@@ -33,7 +33,7 @@ public class NotificationService extends IntentService {
             try {
                 realm = Realm.getDefaultInstance();
                 RealmResults<Drop> realmResults = realm.where(Drop.class).equalTo("completed", false).findAll();
-    
+
                 for (Drop currentDrop : realmResults) {
                     if (isNotificationNeeded(currentDrop.getAdded(),currentDrop.getWhen()))
                     {

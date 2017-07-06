@@ -39,11 +39,11 @@ public class AppBucketDrops extends Application {
     }
 
     public static void setRalewayRegular(Context context, TextView textView) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/raleway_thin.tff");
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/raleway_thin.ttf");
         textView.setTypeface(typeface);
     }
     public static void setRalewayRegular(Context context, TextView... textViews) {
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/raleway_thin.tff");
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"fonts/raleway_thin.ttf");
         for ( TextView textView: textViews) {
             textView.setTypeface(typeface);
         }
